@@ -3,15 +3,8 @@
 
 my_path := $(call my-dir)
 
-ifdef SUPERUSER_EMBEDDED
 SUPERUSER_PACKAGE := com.android.settings
-else
-ifeq ($(SUPERUSER_PACKAGE),)
-SUPERUSER_PACKAGE := com.thirdparty.superuser
-endif
 include $(my_path)/Superuser/Android.mk
-endif
-
 
 LOCAL_PATH := $(my_path)
 include $(CLEAR_VARS)
@@ -28,9 +21,7 @@ ifdef SUPERUSER_PACKAGE_PREFIX
   LOCAL_CFLAGS += -DREQUESTOR_PREFIX=\"$(SUPERUSER_PACKAGE_PREFIX)\"
 endif
 
-ifdef SUPERUSER_EMBEDDED
-  LOCAL_CFLAGS += -DSUPERUSER_EMBEDDED
-endif
+LOCAL_CFLAGS += -DSUPERUSER_EMBEDDED
 
 LOCAL_MODULE_PATH := $(TARGET_OUT_OPTIONAL_EXECUTABLES)
 include $(BUILD_EXECUTABLE)
@@ -50,8 +41,6 @@ ALL_DEFAULT_INSTALLED_MODULES += $(SYMLINKS)
 ALL_MODULES.$(LOCAL_MODULE).INSTALLED := \
     $(ALL_MODULES.$(LOCAL_MODULE).INSTALLED) $(SYMLINKS)
 
-ifdef SUPERUSER_EMBEDDED
-
 # make sure init.superuser.rc is imported from
 # init.rc or similar
 
@@ -67,5 +56,3 @@ $(SUPERUSER_MARKER): $(LOCAL_INSTALLED_MODULE)
 
 ALL_MODULES.$(LOCAL_MODULE).INSTALLED := \
     $(ALL_MODULES.$(LOCAL_MODULE).INSTALLED) $(SUPERUSER_RC) $(SUPERUSER_MARKER)
-
-endif
